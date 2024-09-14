@@ -1,11 +1,17 @@
 {
-  "name": "jooland-shoes",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "author": " <deepakgoswamiofficial@gmail.com>",
-  "license": "ISC"
+    "name": "jooland-shoes",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "type": "module",
+    "scripts": {
+        "dev": "nodemon src/index.js"
+    },
+    "author": " <deepakgoswamiofficial@gmail.com>",
+    "license": "ISC",
+    "dependencies": {
+        "cors": "^2.8.5",
+        "express": "^4.20.0",
+        "mongoose": "^8.6.1"
+    }
 }
