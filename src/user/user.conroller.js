@@ -7,9 +7,6 @@ const register = (req, res, next) => {
     } catch (error) {
         next(error);
     }
-    // res.status(201).json(
-    //     new ApiResponse(201, req.body, 'User created successfully')
-    // );
 };
 
 export { register };
