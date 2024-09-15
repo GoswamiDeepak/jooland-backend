@@ -30,9 +30,4 @@ app.use('/api/v1', userRouter);
 
 export default app;
 
-/*
-app.listen(PORT, () => { // sample for app to run on a particular port
-    console.log(`Server is running at port:: http://localhost:${PORT}`);
-});
 
-*/
