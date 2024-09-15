@@ -6,6 +6,8 @@ dotenv.config(); //alowing env file across application
 
 const app = express(); //app object
 
+app.use(express.json()) //allowing json to read
+
 //application sample
 app.get('/', function (req, res, next) {
     res.send('Welcome');
