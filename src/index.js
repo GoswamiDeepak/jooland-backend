@@ -20,9 +20,3 @@ connetDB()
         console.log('Connection failed: ' + error);
     });
 
-/*
-app.listen(PORT, () => { // sample for app to run on a particular port
-    console.log(`Server is running at port:: http://localhost:${PORT}`);
-});
-
-*/
