@@ -1,11 +1,10 @@
 import dotenv from 'dotenv';
 import connetDB from './db/index.js';
 import app from './app.js';
-import errorHanlder from './middlewares/error-handler.js';
+import errorHanlderMiddleware from './middlewares/error-handler-middleware.js';
 dotenv.config(); //alowing .env file across application
 
-
-app.use(errorHanlder); //middleare to handle Error
+app.use(errorHanlderMiddleware); //middleare to handle Error
 
 const PORT = process.env.PORT ?? 5500; //port
 
@@ -19,4 +18,3 @@ connetDB()
     .catch((error) => {
         console.log('Connection failed: ' + error);
     });
-

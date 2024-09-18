@@ -2,6 +2,7 @@ class CustomErrorHandler extends Error {
     constructor(statuscode, message) {
         super(message);
         this.status = statuscode;
+        // this.message = message;
     }
 
     static alreadyExist(message) {

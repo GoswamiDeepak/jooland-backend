@@ -1,5 +1,5 @@
-const errorHanlder = (err, req, res, next) => {
-    let statusCode = 500;
+const errorHanlderMiddleware = (err, req, res, next) => {
+    let statusCode = err.status || 500;
     let data = {
         message: 'Internal server Error!',
         ...(process.env.DEBUG_MODE === 'true' && {
@@ -10,4 +10,4 @@ const errorHanlder = (err, req, res, next) => {
     return res.status(statusCode).json(data);
 };
 
-export default errorHanlder;
+export default errorHanlderMiddleware;

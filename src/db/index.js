@@ -5,6 +5,7 @@ const connetDB = async () => {
         const connectionInstance = await mongoose.connect(
             `${process.env.MONGO_DB}/jooland`
         );
+
         console.log(`MongoDB connected: ${connectionInstance.connection.host}`);
     } catch (error) {
         console.log('MONGODB CONNECTION FAILED', error);
