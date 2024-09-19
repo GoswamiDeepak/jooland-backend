@@ -1,6 +1,7 @@
 import ApiResponse from '../utils/api-response.js';
 import CustomErrorHandler from '../utils/custom-errorHandler.js';
-import { registerSchema } from '../validators/user-validator.js';
+import generateAccessAndRefreshToken from '../utils/generate-access&refreshtoken.js';
+import { registerSchema, loginSchema } from '../validators/user-validator.js';
 import { User } from './user.model.js';
 
 const register = async (req, res, next) => {
@@ -37,4 +38,49 @@ const register = async (req, res, next) => {
     }
 };
 
-export { register };
+const login = async (req, res, next) => {
+    const { error } = loginSchema.validate(req.body); // request field validating
+    if (error) {
+        next(error);
+    }
+
+    const { email, password } = req.body;
+
+    try {
+        const isUser = await User.findOne({ email: email }); //Find document by email
+
+        if (!isUser) {
+            throw CustomErrorHandler.unAuthorized(
+                'user do not exist. Please Register then login!'
+            );
+        }
+
+        const validatePassword = await isUser.isPasswordCheck(password); // check password is valid
+
+        if (!validatePassword) {
+            throw CustomErrorHandler.wrongCredentials('invalid credential!');
+        }
+
+        const { accessToken, refreshToken } =
+            await generateAccessAndRefreshToken(isUser); //generate accessToken & refresh Token 
+
+        const data = {
+            _id: isUser._id,
+            username: isUser.username,
+            email: isUser.email,
+            role: isUser.role,
+        };
+
+        res.status(200).json(
+            new ApiResponse(200, {
+                ...data,
+                accessToken,
+                refreshToken,
+            })
+        );
+    } catch (error) {
+        next(error);
+    }
+};
+
+export { register, login };

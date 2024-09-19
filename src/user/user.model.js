@@ -12,7 +12,7 @@ const userSchema = new mongoose.Schema(
             trim: true,
         },
         email: {
-            type: String, 
+            type: String,
             required: true,
             unique: true,
             lowercase: true,
@@ -31,7 +31,7 @@ const userSchema = new mongoose.Schema(
             type: String,
         },
     },
-    { timestamp: true }
+    { timestamps: true }
 );
 
 //hash password before saving using middleware
@@ -48,8 +48,13 @@ userSchema.methods.isPasswordCheck = async function (password) {
 };
 
 userSchema.methods.generateAccessToken = function () {
-    jwt.sign(
-        { _id: this._id, username: this.username, email: this.email }, //payload
+    return jwt.sign(
+        {
+            _id: this._id,
+            username: this.username,
+            email: this.email,
+            role: this.role,
+        }, //payload
         process.env.ACCESS_TOKEN_SECRET, //secret token
         {
             expiresIn: process.env.ACCESS_TOKEN_EXPIRY,
@@ -58,9 +63,9 @@ userSchema.methods.generateAccessToken = function () {
 };
 
 userSchema.methods.generateRefreshToken = function () {
-    jwt.sign(
-        { _id: this._id, username: this.username, email: this.email }, //payload
-        process.env.REFRESH_TOKEN_SECRET, //secret token
+    return jwt.sign(
+        { _id: this._id }, //payload
+        process.env.REFRESH_TOKEN_SECRET, //secret refresg token
         {
             expiresIn: process.env.REFRESH_TOKEN_EXPIRY,
         }
