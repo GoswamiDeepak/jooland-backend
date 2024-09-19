@@ -19,7 +19,7 @@ const register = async (req, res, next) => {
 
         //check username or email is already exist in our DB
         if (isUser.length > 0) {
-            throw CustomErrorHandler.alreadyExist('user already exist!');
+            return next(CustomErrorHandler.alreadyExist('user already exist!'));
         }
     } catch (error) {
         next(error);
@@ -58,11 +58,11 @@ const login = async (req, res, next) => {
         const validatePassword = await isUser.isPasswordCheck(password); // check password is valid
 
         if (!validatePassword) {
-            throw CustomErrorHandler.wrongCredentials('invalid credential!');
+            return next(CustomErrorHandler.wrongCredentials());
         }
 
         const { accessToken, refreshToken } =
-            await generateAccessAndRefreshToken(isUser); //generate accessToken & refresh Token 
+            await generateAccessAndRefreshToken(isUser); //generate accessToken & refresh Token
 
         const data = {
             _id: isUser._id,
@@ -83,4 +83,36 @@ const login = async (req, res, next) => {
     }
 };
 
-export { register, login };
+const getUserDetail = async (req, res, next) => {
+    try {
+        const user = await User.findById(req.user._id).select(
+            '-password -refreshToken -__v'
+        );
+        if (!user) {
+            return next(CustomErrorHandler.unAuthorized('User not found'));
+        }
+        res.status(200).json(new ApiResponse(200, user));
+    } catch (error) {
+        next(error.message);
+    }
+};
+
+const getSingleUser = async (req, res, next) => {
+    try {
+        const { id } = req.params;
+        const user = await User.findById(id).select(
+            '-password -refreshToken -__v'
+        );
+        console.log(user);
+
+        if (!user) {
+            return next(CustomErrorHandler.notFound('User not found!'));
+        }
+        res.status(200).json(new ApiResponse(200, user));
+    } catch (error) {
+        // next(error)
+        next(CustomErrorHandler.serverError(error.message));
+    }
+};
+
+export { register, login, getUserDetail, getSingleUser };

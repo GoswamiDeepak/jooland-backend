@@ -57,7 +57,7 @@ userSchema.methods.generateAccessToken = function () {
         }, //payload
         process.env.ACCESS_TOKEN_SECRET, //secret token
         {
-            expiresIn: process.env.ACCESS_TOKEN_EXPIRY,
+            expiresIn: process.env.ACCESS_TOKEN_EXPIRY,  //token expiry
         }
     );
 };
@@ -65,7 +65,7 @@ userSchema.methods.generateAccessToken = function () {
 userSchema.methods.generateRefreshToken = function () {
     return jwt.sign(
         { _id: this._id }, //payload
-        process.env.REFRESH_TOKEN_SECRET, //secret refresg token
+        process.env.REFRESH_TOKEN_SECRET, //secret refresh token
         {
             expiresIn: process.env.REFRESH_TOKEN_EXPIRY,
         }

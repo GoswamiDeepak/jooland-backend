@@ -4,7 +4,7 @@ import CustomErrorHandler from '../utils/custom-errorHandler.js';
 export default function auth(req, res, next) {
     try {
         const token =
-            req.cookies.accessToken ||
+            req?.cookies?.accessToken ||
             req.header('Authorization')?.replace('Bearer ', ''); // req.headers.authorization.split(' ')[1];
 
         if (!token) {
@@ -25,5 +25,7 @@ export default function auth(req, res, next) {
         next();
     } catch (error) {
         return next(CustomErrorHandler.serverError(error.message));
+        // return next(CustomErrorHandler.serverError(error));
+        // next(error)
     }
 }

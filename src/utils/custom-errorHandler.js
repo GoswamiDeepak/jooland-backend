@@ -2,19 +2,22 @@ class CustomErrorHandler extends Error {
     constructor(statuscode, message) {
         super(message);
         this.status = statuscode;
-        // this.message = message;
     }
 
-    static alreadyExist(message) {
+    static alreadyExist(message = 'user already exist.') {
         return new CustomErrorHandler(409, message);
     }
 
-    static wrongCredentials(message) {
+    static wrongCredentials(message = 'email or password are invalid.') {
         return new CustomErrorHandler(401, message);
     }
 
     static unAuthorized(message = 'un-authorized user!') {
         return new CustomErrorHandler(401, message);
+    }
+
+    static notFound(message = 'not found!') {
+        return new CustomErrorHandler(404, message);
     }
 
     static serverError(message = 'Internal server error') {
