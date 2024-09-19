@@ -103,7 +103,6 @@ const getSingleUser = async (req, res, next) => {
         const user = await User.findById(id).select(
             '-password -refreshToken -__v'
         );
-        console.log(user);
 
         if (!user) {
             return next(CustomErrorHandler.notFound('User not found!'));
@@ -115,5 +114,19 @@ const getSingleUser = async (req, res, next) => {
     }
 };
 
+const deleteUser = async (req, res, next) => {
+    try {
+        const { id } = req.params;
+        const user = await User.findByIdAndDelete(id);
+        if (!user) {
+            return next(CustomErrorHandler.notFound('User not found'));
+        }
+        res.status(200).json(
+            new ApiResponse(200, 'User deleted successfully!')
+        );
+    } catch (error) {
+        next(error);
+    }
+};
 
-export { register, login, getUserDetail, getSingleUser };
+export { register, login, getUserDetail, getSingleUser, deleteUser };
