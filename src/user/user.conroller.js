@@ -115,4 +115,5 @@ const getSingleUser = async (req, res, next) => {
     }
 };
 
+
 export { register, login, getUserDetail, getSingleUser };
