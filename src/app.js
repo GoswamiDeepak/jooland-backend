@@ -1,6 +1,6 @@
 import express from 'express';
 import cors from 'cors';
-
+import cookieParser from 'cookie-parser';
 
 const app = express(); //app object
 
@@ -19,6 +19,8 @@ app.use(
     })
 );
 
+app.use(cookieParser());
+
 //application sample
 app.get('/', function (req, res, next) {
     res.send('Welcome');
@@ -29,5 +31,3 @@ import userRouter from './user/user.router.js';
 app.use('/api/v1', userRouter);
 
 export default app;
-
-

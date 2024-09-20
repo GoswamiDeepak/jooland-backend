@@ -1,8 +1,10 @@
+import jwt from 'jsonwebtoken';
 import ApiResponse from '../utils/api-response.js';
 import CustomErrorHandler from '../utils/custom-errorHandler.js';
 import generateAccessAndRefreshToken from '../utils/generate-access&refreshtoken.js';
 import { registerSchema, loginSchema } from '../validators/user-validator.js';
 import { User } from './user.model.js';
+import { options } from '../utils/cookie-option.js';
 
 const register = async (req, res, next) => {
     const { error } = registerSchema.validate(req.body); // request field validating
@@ -71,13 +73,65 @@ const login = async (req, res, next) => {
             role: isUser.role,
         };
 
-        res.status(200).json(
-            new ApiResponse(200, {
-                ...data,
-                accessToken,
-                refreshToken,
-            })
+        return res
+            .status(200)
+            .cookie('accessToken', accessToken, options)
+            .cookie('refreshToken', refreshToken, options)
+            .json(
+                new ApiResponse(200, {
+                    ...data,
+                    accessToken,
+                    refreshToken,
+                })
+            );
+    } catch (error) {
+        next(error);
+    }
+};
+
+const refreshAccessToken = async (req, res, next) => {
+    const incomingRefreshToken =
+        req?.cookies?.refreshToken || req?.body?.refreshToken; //refresh token from user
+
+    if (!incomingRefreshToken) {
+        return next(CustomErrorHandler.unAuthorized()); //if refresh token does not present
+    }
+    try {
+        //jwt verifing refresh token
+        const decodedToken = jwt.verify(
+            incomingRefreshToken,
+            process.env.REFRESH_TOKEN_SECRET
         );
+
+        const user = await User.findById(decodedToken._id); //calling db call for to get user fields.
+
+        if (!user) {
+            return next(
+                CustomErrorHandler.unAuthorized('Invalid refresh Token!')
+            );
+        }
+        //maching the user's refresh token from api body refresh token
+        if (incomingRefreshToken !== user.refreshToken) {
+            return next(
+                CustomErrorHandler.unAuthorized(
+                    'Refresh token is expired or used!'
+                )
+            );
+        }
+
+        const { accessToken, refreshToken } =
+            await generateAccessAndRefreshToken(user);
+
+        res.status(201)
+            .cookie('accessToken', accessToken, options)
+            .cookie('refreshToken', refreshToken, options)
+            .json(
+                new ApiResponse(
+                    201,
+                    { accessToken, refreshToken },
+                    'Access Token refreshed.!'
+                )
+            );
     } catch (error) {
         next(error);
     }
@@ -129,4 +183,11 @@ const deleteUser = async (req, res, next) => {
     }
 };
 
-export { register, login, getUserDetail, getSingleUser, deleteUser };
+export {
+    register,
+    login,
+    getUserDetail,
+    getSingleUser,
+    deleteUser,
+    refreshAccessToken,
+};
