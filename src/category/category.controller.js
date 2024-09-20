@@ -18,7 +18,17 @@ export const categoryController = {
             return next(error);
         }
     },
-    async getCategory(req, res, next) {},
+
+    async getCategory(req, res, next) {
+        try {
+            const category = await Category.find();
+            res.status(200).json(
+                new ApiResponse(200, category, 'all category')
+            );
+        } catch (error) {
+            next(error);
+        }
+    },
 
     async updateCategory(req, res, next) {
         const { id } = req.params;
@@ -47,10 +57,17 @@ export const categoryController = {
             next(error);
         }
     },
+    
     async deleteCategory(req, res, next) {
         const { id } = req.params;
         try {
-            const isDeleted = await findByIdAndDelete(id);
+            const isDeleted = await Category.findByIdAndDelete(id);
+            if (!isDeleted) {
+                return next(
+                    CustomErrorHandler.serverError('invalid category id!')
+                );
+            }
+            res.status(200).json(new ApiResponse(200, '', 'category deleted!'));
         } catch (error) {
             next(error);
         }
