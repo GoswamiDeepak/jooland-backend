@@ -6,12 +6,14 @@ const app = express(); //app object
 
 //middlewares
 app.use(express.json()); //allowing json to read
+
 app.use(
     express.urlencoded({
         extended: true,
         limit: '16kb',
     })
 );
+
 app.use(
     cors({
         origin: '*',
@@ -28,6 +30,9 @@ app.get('/', function (req, res, next) {
 
 //application routes
 import userRouter from './user/user.router.js';
+import categoryRouter from './category/category.route.js';
+
 app.use('/api/v1', userRouter);
+app.use('/api/v1', categoryRouter);
 
 export default app;
