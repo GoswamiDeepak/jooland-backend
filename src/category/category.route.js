@@ -10,6 +10,6 @@ router.use(auth, adminMiddleware);
 router
     .route('/category/create-category')
     .post(categoryController.createCategory);
-router.route('/category/:id').put()
+router.route('/category/:id').put(categoryController.updateCategory)
 
 export default router;
