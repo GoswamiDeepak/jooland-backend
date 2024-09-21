@@ -54,6 +54,25 @@ class ProductController {
     //delete product
     async deleteProduct(req, res, next) {
         const { id } = req.params;
+        if (!id) {
+            return next(
+                CustomErrorHandler.badRequest(
+                    'Please provide a valid product id'
+                )
+            );
+        }
+
+        try {
+            const product = await Product.findByIdAndDelete(id);
+            if (!product) {
+                return next(CustomErrorHandler.serverError());
+            }
+            res.status(200).json(
+                new ApiResponse(200, '', 'prduct is deleted!')
+            );
+        } catch (error) {
+            next(error);
+        }
     }
 }
 export const productController = new ProductController();
