@@ -1,8 +1,11 @@
-import ApiResponse from '../utils/api-response';
-import CustomErrorHandler from '../utils/custom-errorHandler';
+import ApiResponse from '../utils/api-response.js';
+import CustomErrorHandler from '../utils/custom-errorHandler.js';
 
 class Product {
-    async createProduct(req, res, next) {}
+    async createProduct(req, res, next) {
+        // console.log(req.body);
+        res.json(req.body);
+    }
     async getProducts(req, res, next) {}
     async getSingleProduct(req, res, next) {
         const { id } = req.params;

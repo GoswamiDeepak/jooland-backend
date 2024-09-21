@@ -20,6 +20,7 @@ const productSchema = new mongoose.Schema(
             type: Number,
             min: [1, 'price discound percentage should be greater than 1'],
             max: [99, 'price discound percentage should be less than 99'],
+            default: 0,
         },
         rating: {
             type: Number,
