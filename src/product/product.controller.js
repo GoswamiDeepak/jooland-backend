@@ -1,9 +1,14 @@
 import ApiResponse from '../utils/api-response.js';
 import CustomErrorHandler from '../utils/custom-errorHandler.js';
+import { productSchema } from '../validators/product-validator.js';
 
 class Product {
     async createProduct(req, res, next) {
         // console.log(req.body);
+        const { error } = productSchema.validate(req.body);
+        if (error) {
+            next(error);
+        }
         res.json(req.body);
     }
     async getProducts(req, res, next) {}
