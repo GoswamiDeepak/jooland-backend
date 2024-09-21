@@ -18,20 +18,20 @@ const productSchema = new mongoose.Schema(
         },
         discoundPercentage: {
             type: Number,
-            min: [1, 'price discound percentage should be greater than 1'],
+            min: 0,
             max: [99, 'price discound percentage should be less than 99'],
             default: 0,
+            required: false,
         },
         rating: {
             type: Number,
-            min: [1, 'rating should be greater than 1'],
+            min: 0,
             max: [5, 'rating should be less than or equal to 5'],
             default: 0,
+            required: false,
         },
         stock: {
             type: Number,
-            min: [1, 'rating should be greater than 1'],
-            max: [5, 'rating should be less than or equal to 5'],
             default: 0,
         },
         brand: {
@@ -57,7 +57,7 @@ const productSchema = new mongoose.Schema(
             type: [mongoose.Schema.Types.Mixed],
         },
         highlights: {
-            type: [Sting],
+            type: [String],
         },
         discountPrice: {
             type: Number,
@@ -70,9 +70,10 @@ const productSchema = new mongoose.Schema(
     { timestamps: true }
 );
 
-//virtual field
-productSchema.virtual('discountPrice').get(function () {
-    return price * (1 - discoundPercentage / 100);
+
+productSchema.pre('save', function (next) {
+    this.discountPrice = this.price * (1 - this.discoundPercentage / 100);
+    next();
 });
 
 export const Product = mongoose.model('Product', productSchema);

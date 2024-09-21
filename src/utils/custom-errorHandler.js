@@ -3,13 +3,15 @@ class CustomErrorHandler extends Error {
         super(message);
         this.status = statuscode;
     }
-
+    static badRequest(message) {
+        return new CustomErrorHandler(400, message);
+    }
     static alreadyExist(message = 'user already exist.') {
         return new CustomErrorHandler(409, message);
     }
 
     static wrongCredentials(message = 'email or password are invalid.') {
-        return new CustomErrorHandler(400, message);
+        return new CustomErrorHandler(401, message);
     }
 
     static unAuthorized(message = 'un-authorized user!') {

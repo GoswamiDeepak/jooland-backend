@@ -1,7 +1,7 @@
-import CustomErrorHandler from '../utils/custom-errorHandler';
-import { ValidationError } from 'joi';
+import Joi from 'joi';
+import CustomErrorHandler from '../utils/custom-errorHandler.js';
 
-const errorHanlderMiddleware = (err, _, res, _) => {
+const errorHanlderMiddleware = (err, req, res, next) => {
     let statusCode = 500;
     let data = {
         message: 'Internal server Error!',
@@ -10,7 +10,7 @@ const errorHanlderMiddleware = (err, _, res, _) => {
         }),
     };
 
-    if (err instanceof ValidationError) {
+    if (err instanceof Joi.ValidationError) {
         statusCode = 422;
         data = {
             message: err.message,
