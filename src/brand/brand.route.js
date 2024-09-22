@@ -5,7 +5,7 @@ import { brandController } from './brand.controller.js';
 
 const router = express.Router();
 
-router.use(auth, adminMiddleware);
+// router.use(auth, adminMiddleware);
 
 router.route('/brand/create-brand').post(brandController.createBrand);
 

@@ -141,21 +141,21 @@ const refreshAccessToken = async (req, res, next) => {
 
 const getUserDetail = async (req, res, next) => {
     try {
-        const user = await User.findById(req.user._id).select(
-            '-password -refreshToken -__v'
-        );
+        const user = await User.find().select('-password -refreshToken -__v');
         if (!user) {
             return next(CustomErrorHandler.unAuthorized('User not found'));
         }
-        res.status(200).json(new ApiResponse(200, user));
+        return res.status(200).json(new ApiResponse(200, user));
     } catch (error) {
-        next(error.message);
+        return next(error.message);
     }
 };
 
 const getSingleUser = async (req, res, next) => {
     try {
-        const { id } = req.params;
+        let { id } = req.params;
+        // id = objectId(id);
+
         const user = await User.findById(id).select(
             '-password -refreshToken -__v'
         );
@@ -163,10 +163,9 @@ const getSingleUser = async (req, res, next) => {
         if (!user) {
             return next(CustomErrorHandler.notFound('User not found!'));
         }
-        res.status(200).json(new ApiResponse(200, user));
+        return res.status(200).json(new ApiResponse(200, user));
     } catch (error) {
-        // next(error)
-        next(CustomErrorHandler.serverError(error.message));
+        next(error);
     }
 };
 
@@ -184,6 +183,30 @@ const deleteUser = async (req, res, next) => {
         next(error);
     }
 };
+const logoutUser = async (req, res, next) => {
+    try {
+        await User.findByIdAndUpdate(
+            String(req.user._id),
+            {
+                $unset: {
+                    refreshToken: 1,
+                },
+            },
+            {
+                new: true,
+            }
+        );
+        return res
+            .status(200)
+            .clearCookie('accessToken', options)
+            .clearCookie('refreshToken', options)
+            .json(new ApiResponse(200, {}, 'user loged out!'));
+    } catch (error) {
+        console.log(error);
+
+        next(error);
+    }
+};
 
 export {
     register,
@@ -192,4 +215,5 @@ export {
     getSingleUser,
     deleteUser,
     refreshAccessToken,
+    logoutUser,
 };

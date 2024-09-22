@@ -6,6 +6,9 @@ class CustomErrorHandler extends Error {
     static badRequest(message) {
         return new CustomErrorHandler(400, message);
     }
+    static accessDenied(message = 'Access denied!') {
+        return new CustomErrorHandler(403, message);
+    }
     static alreadyExist(message = 'user already exist.') {
         return new CustomErrorHandler(409, message);
     }
