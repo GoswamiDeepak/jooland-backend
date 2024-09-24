@@ -5,7 +5,7 @@ import { categoryController } from './category.controller.js';
 
 const router = express.Router();
 
-router.use(auth, adminMiddleware);
+// router.use(auth, adminMiddleware);
 
 router
     .route('/category/create-category')
