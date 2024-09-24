@@ -11,22 +11,34 @@ export const cartController = {
         }
 
         try {
-            const cart = await Cart.create(req.body);
+            const cart = await Cart.create({ ...req.body, user: req.user._id });
 
             if (!cart) {
                 return CustomErrorHandler.serverError();
             }
 
+            const populatedCart = await Cart.findById(cart._id)
+                .select('-__v')
+                .populate('product')
+                .populate({
+                    path: 'user',
+                    select: '-refreshToken -password',
+                });
+
+            if (!populatedCart) {
+                return CustomErrorHandler.serverError();
+            }
+
             return res
                 .status(201)
-                .json(new ApiResponse(201, cart, 'cart is created!'));
+                .json(new ApiResponse(201, populatedCart, 'cart is created!'));
         } catch (error) {
             next(error);
         }
     },
     async getAllCart(req, res, next) {
         try {
-            const cart = await Cart.find();
+            const cart = await Cart.find({ user: req.user._id });
             return res
                 .status(200)
                 .json(new ApiResponse(200, cart, 'all carts!'));
@@ -41,9 +53,20 @@ export const cartController = {
             next(error);
         }
         try {
-            const cart = await Cart.findByIdAndUpdate(id, req.body, {
-                new: true,
-            });
+            const cart = await Cart.findByIdAndUpdate(
+                id,
+                { ...req.body, user: req.user._id },
+                {
+                    new: true,
+                }
+            );
+
+            //if cart is null mean wrong object id
+            if (!cart) {
+                console.log('inside cart error');
+
+                return next(CustomErrorHandler.accessDenied('invalid cart Id'));
+            }
             return res
                 .status(200)
                 .json(new ApiResponse(200, cart, 'cart is updated.!'));
