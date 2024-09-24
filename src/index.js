@@ -1,7 +1,7 @@
 import dotenv from 'dotenv';
 import connetDB from './db/index.js';
 import app from './app.js';
-import errorHanlderMiddleware from './middlewares/error-handler-middleware.js';
+import errorHanlderMiddleware from './middlewares/errorHandler-middleware.js';
 dotenv.config(); //alowing .env file across application
 
 app.use(errorHanlderMiddleware); //middleare to handle Error

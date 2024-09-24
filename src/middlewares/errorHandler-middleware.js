@@ -1,12 +1,17 @@
 import Joi from 'joi';
 import CustomErrorHandler from '../utils/custom-errorHandler.js';
+import mongoose from 'mongoose';
 
 const errorHanlderMiddleware = (err, req, res, next) => {
-    let statusCode = 500;
+    let statusCode = err instanceof mongoose.Error ? 400 : 500;
+
     let data = {
         message: 'Internal server Error!',
         ...(process.env.DEBUG_MODE === 'true' && {
             originalError: err.message,
+        }),
+        ...(process.env.DEBUG_MODE === 'true' && {
+            stack: err.stack,
         }),
     };
 

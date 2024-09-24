@@ -35,7 +35,7 @@ const register = async (req, res, next) => {
         });
 
         res.status(201).json(
-            new ApiResponse(201, '', 'Registration Successfully!')
+            new ApiResponse(201, {}, 'Registration Successfully!')
         );
     } catch (error) {
         next(error);
@@ -202,8 +202,6 @@ const logoutUser = async (req, res, next) => {
             .clearCookie('refreshToken', options)
             .json(new ApiResponse(200, {}, 'user loged out!'));
     } catch (error) {
-        console.log(error);
-
         next(error);
     }
 };
