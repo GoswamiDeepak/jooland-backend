@@ -30,13 +30,15 @@ app.get('/', function (req, res, next) {
 
 //application routes
 import userRouter from './user/user.router.js';
-// import categoryRouter from './category/category.route.js';
-// import brandRouter from './brand/brand.route.js';
+import categoryRouter from './category/category.route.js';
+import brandRouter from './brand/brand.route.js';
 import productRouter from './product/product.route.js';
+import cartRouter from './cart/cart.route.js';
 
 app.use('/api/v1', userRouter);
-// app.use('/api/v1', categoryRouter);
-// app.use('/api/v1', brandRouter);
+app.use('/api/v1', categoryRouter);
+app.use('/api/v1', brandRouter);
 app.use('/api/v1', productRouter);
+app.use('/api/v1', cartRouter);
 
 export default app;
