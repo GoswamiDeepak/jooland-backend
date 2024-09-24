@@ -24,4 +24,42 @@ export const cartController = {
             next(error);
         }
     },
+    async getAllCart(req, res, next) {
+        try {
+            const cart = await Cart.find();
+            return res
+                .status(200)
+                .json(new ApiResponse(200, cart, 'all carts!'));
+        } catch (error) {
+            next(error);
+        }
+    },
+    async updateCart(req, res, next) {
+        const { id } = req.params;
+        const { error } = cartSchema.validate(req.body);
+        if (error) {
+            next(error);
+        }
+        try {
+            const cart = await Cart.findByIdAndUpdate(id, req.body, {
+                new: true,
+            });
+            return res
+                .status(200)
+                .json(new ApiResponse(200, cart, 'cart is updated.!'));
+        } catch (error) {
+            next(error);
+        }
+    },
+    async deleteCart(req, res, next) {
+        const { id } = req.params;
+        try {
+            await Cart.findByIdAndDelete(id);
+            return res
+                .status(200)
+                .json(new ApiResponse(200, {}, 'cart deleted!'));
+        } catch (error) {
+            next(error);
+        }
+    },
 };
