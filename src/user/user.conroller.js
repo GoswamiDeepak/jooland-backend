@@ -62,7 +62,9 @@ const login = async (req, res, next) => {
         const validatePassword = await isUser.isPasswordCheck(password); // check password is valid
 
         if (!validatePassword) {
-            return next(CustomErrorHandler.wrongCredentials());
+            return next(
+                CustomErrorHandler.wrongCredentials('Password is Invalid!')
+            );
         }
 
         const { accessToken, refreshToken } =
