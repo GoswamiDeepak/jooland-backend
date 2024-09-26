@@ -6,6 +6,7 @@ import { registerSchema, loginSchema } from '../validators/user-validator.js';
 import { User } from './user.model.js';
 import { options } from '../utils/cookie-option.js';
 
+
 const register = async (req, res, next) => {
     const { error } = registerSchema.validate(req.body); // request field validating
     if (error) {
@@ -143,13 +144,17 @@ const refreshAccessToken = async (req, res, next) => {
 
 const getUserDetail = async (req, res, next) => {
     try {
-        const user = await User.find().select('-password -refreshToken -__v');
+        const user = await User.findById(req.user._id).select(
+            '-password -refreshToken -__v'
+        );
         if (!user) {
             return next(CustomErrorHandler.unAuthorized('User not found'));
         }
         return res.status(200).json(new ApiResponse(200, user));
     } catch (error) {
-        return next(error.message);
+        console.log(error);
+
+        return next(error);
     }
 };
 

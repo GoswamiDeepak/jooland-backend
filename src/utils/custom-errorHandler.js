@@ -13,7 +13,7 @@ class CustomErrorHandler extends Error {
         return new CustomErrorHandler(409, message);
     }
 
-    static wrongCredentials(message = 'email or password are invalid.') {
+    static wrongCredentials(message = 'email or password are invalid.') { 
         return new CustomErrorHandler(401, message);
     }
 

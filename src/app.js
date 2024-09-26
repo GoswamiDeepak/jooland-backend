@@ -18,12 +18,12 @@ app.use(
 
 app.use(
     cors({
-        origin: '*',
+        origin: 'http://localhost:3000',
         credentials: true, // This option indicates whether or not the response to the frontend can include cookies
     })
 );
 
-app.use(cookieParser()); //allowing cookie in middleware 
+app.use(cookieParser()); //allowing cookie in middleware
 
 const morganFormat = ':method :url :status :response-time ms';
 app.use(
