@@ -1,0 +1,6 @@
+{"level":"\u001b[32minfo\u001b[39m","message":"{\"method\":\"GET\",\"url\":\"/api/v1/user\",\"status\":\"500\",\"responseTime\":\"8.864\"}","timestamp":"2024-09-27T20:31:12.877Z"}
+{"level":"\u001b[32minfo\u001b[39m","message":"{\"method\":\"GET\",\"url\":\"/api/v1/product?page=1&limit=5&\",\"status\":\"304\",\"responseTime\":\"67.346\"}","timestamp":"2024-09-27T20:31:12.909Z"}
+{"level":"\u001b[32minfo\u001b[39m","message":"{\"method\":\"GET\",\"url\":\"/api/v1/user\",\"status\":\"500\",\"responseTime\":\"20.266\"}","timestamp":"2024-09-27T20:32:16.849Z"}
+{"level":"\u001b[32minfo\u001b[39m","message":"{\"method\":\"GET\",\"url\":\"/api/v1/product?page=1&limit=5&\",\"status\":\"304\",\"responseTime\":\"80.090\"}","timestamp":"2024-09-27T20:32:16.890Z"}
+{"level":"\u001b[32minfo\u001b[39m","message":"{\"method\":\"GET\",\"url\":\"/api/v1/user\",\"status\":\"400\",\"responseTime\":\"6.313\"}","timestamp":"2024-09-27T20:33:51.942Z"}
+{"level":"\u001b[32minfo\u001b[39m","message":"{\"method\":\"GET\",\"url\":\"/api/v1/product?page=1&limit=5&\",\"status\":\"304\",\"responseTime\":\"68.184\"}","timestamp":"2024-09-27T20:33:51.980Z"}

@@ -2,9 +2,11 @@ import jwt from 'jsonwebtoken';
 import CustomErrorHandler from '../utils/custom-errorHandler.js';
 
 export default function auth(req, res, next) {
-    const token = req.cookies.accessToken; // or however you're extracting the token
+    const token = req?.cookies?.accessToken; // or however you're extracting the token
+    console.log(token);
+
     if (!token) {
-        return next(new CustomErrorHandler.badRequest('Access token missing'));
+        return next(CustomErrorHandler.badRequest('Access token missing'));
     }
     try {
         // Verify the access token

@@ -6,7 +6,6 @@ import { registerSchema, loginSchema } from '../validators/user-validator.js';
 import { User } from './user.model.js';
 import { options } from '../utils/cookie-option.js';
 
-
 const register = async (req, res, next) => {
     const { error } = registerSchema.validate(req.body); // request field validating
     if (error) {
@@ -97,6 +96,7 @@ const login = async (req, res, next) => {
 const refreshAccessToken = async (req, res, next) => {
     const incomingRefreshToken =
         req?.cookies?.refreshToken || req?.body?.refreshToken; //refresh token from user
+
 
     if (!incomingRefreshToken) {
         return next(CustomErrorHandler.unAuthorized()); //if refresh token does not present
