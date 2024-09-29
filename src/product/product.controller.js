@@ -35,6 +35,8 @@ class ProductController {
             _order,
             page = 1,
             limit = 5,
+            minPrice,
+            maxPrice,
         } = req.query;
 
         // Build the query object based on filters
@@ -54,8 +56,16 @@ class ProductController {
             filter.sizes = { $in: sizes.split(',') };
         }
 
+        if (minPrice) {
+            filter.price = { ...filter.price, $gte: Number(minPrice) };
+        }
+
+        if (maxPrice) {
+            filter.price = { ...filter.price, $lte: Number(maxPrice) };
+        }
+
         // Pagination variables
-        const skip = (page - 1) * limit;
+        const skip = (page - 1) * limit; // (2-1) * 5 = 5 if user in second page
         const sort = _sort && _order ? { [_sort]: _order } : {};
 
         try {
@@ -71,6 +81,21 @@ class ProductController {
             if (!products) {
                 return next(CustomErrorHandler.serverError());
             }
+
+            //return in array to find minPrice & maxPrice of product collection
+            const priceRange = await Product.aggregate([
+                {
+                    $match: {},
+                },
+                {
+                    $group: {
+                        _id: null,
+                        minPrice: { $min: '$price' },
+                        maxPrice: { $max: '$price' },
+                    },
+                },
+            ]);
+
             // Calculate total pages
             const totalPages = Math.ceil(totalDocuments / limit);
 
@@ -82,6 +107,10 @@ class ProductController {
                         totalPages, // Total pages based on limit
                         currentPage: page, // Current page number
                         products, // The actual filtered and paginated products
+                        priceRange: priceRange[0] || {
+                            minPrice: 0,
+                            maxPrice: 0,
+                        }, // price range of product collection
                     },
                     'products retrieved!'
                 )

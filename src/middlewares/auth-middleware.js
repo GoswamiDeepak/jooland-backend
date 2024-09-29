@@ -2,9 +2,7 @@ import jwt from 'jsonwebtoken';
 import CustomErrorHandler from '../utils/custom-errorHandler.js';
 
 export default function auth(req, res, next) {
-    const token = req?.cookies?.accessToken; // or however you're extracting the token
-    console.log(token);
-
+    const token = req?.cookies?.accessToken || req.header('Authorization')?.replace('Bearer ', ''); // or however you're extracting the token
     if (!token) {
         return next(CustomErrorHandler.badRequest('Access token missing'));
     }
@@ -31,25 +29,7 @@ export default function auth(req, res, next) {
     }
 }
 
-// const token = req.cookies.accessToken; // or however you're extracting the token
 
-// if (!token) {
-//     return res.status(401).json({ message: 'Access token missing' });
-// }
-
-// try {
-//     // Verify the access token
-//     const decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
-//     req.user = decoded; // Save the decoded user data to req.user
-//     next(); // Proceed to the next middleware or controller
-// } catch (error) {
-//     // Check for token expiration or invalid token
-//     if (error.name === 'TokenExpiredError') {
-//         return res.status(403).json({ message: 'Access token expired' });
-//     }
-
-//     return res.status(403).json({ message: 'Invalid access token' });
-// }
 
 // export default function auth(req, res, next) {
 //     try {

@@ -5,33 +5,57 @@ import { Cart } from './cart.model.js';
 
 export const cartController = {
     async createCart(req, res, next) {
-        const { error } = cartSchema.validate();
+        const { error } = cartSchema.validate(req.body);
         if (error) {
             next(error);
         }
+        const { quantity, product, colors, sizes } = req.body;
 
         try {
-            const cart = await Cart.create({ ...req.body, user: req.user._id });
-
-            if (!cart) {
-                return CustomErrorHandler.serverError();
-            }
-
-            const populatedCart = await Cart.findById(cart._id)
-                .select('-__v')
-                .populate('product')
-                .populate({
-                    path: 'user',
-                    select: '-refreshToken -password',
+            const cart = await Cart.findOne({
+                $and: [{ user: req.user._id }, { product: product }],
+            });
+            if (cart) {
+                //product still in cart need to update
+                const updatedCart = await Cart.findByIdAndUpdate(cart._id, {
+                    $set: {
+                        quantity: cart.quantity + quantity,
+                        colors: colors,
+                        sizes: sizes,
+                    },
                 });
 
-            if (!populatedCart) {
-                return CustomErrorHandler.serverError();
-            }
+                if (!updatedCart) {
+                    return CustomErrorHandler.serverError();
+                }
 
-            return res
-                .status(201)
-                .json(new ApiResponse(201, populatedCart, 'cart is created!'));
+                return res
+                    .status(201)
+                    .json(
+                        new ApiResponse(201, updatedCart, 'cart is updated!')
+                    );
+            } else {
+                //new cart
+                try {
+                    const cart = await Cart.create({
+                        product: product,
+                        colors: colors,
+                        sizes: sizes,
+                        quantity: quantity,
+                        user: req.user._id,
+                    });
+
+                    if (!cart) {
+                        return CustomErrorHandler.serverError();
+                    }
+
+                    return res
+                        .status(201)
+                        .json(new ApiResponse(201, cart, 'cart is created!'));
+                } catch (error) {
+                    return next(error);
+                }
+            }
         } catch (error) {
             next(error);
         }
