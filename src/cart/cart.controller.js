@@ -62,7 +62,9 @@ export const cartController = {
     },
     async getAllCart(req, res, next) {
         try {
-            const cart = await Cart.find({ user: req.user._id });
+            const cart = await Cart.find({ user: req.user._id }).populate(
+                'product'
+            );
             return res
                 .status(200)
                 .json(new ApiResponse(200, cart, 'all carts!'));

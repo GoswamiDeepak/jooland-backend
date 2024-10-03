@@ -54,6 +54,7 @@ import brandRouter from './brand/brand.route.js';
 import productRouter from './product/product.route.js';
 import cartRouter from './cart/cart.route.js';
 import orderRouter from './order/order.route.js';
+import paymentRouter from './payment/payment.route.js';
 
 app.use('/api/v1', userRouter);
 app.use('/api/v1', categoryRouter);
@@ -61,5 +62,6 @@ app.use('/api/v1', brandRouter);
 app.use('/api/v1', productRouter);
 app.use('/api/v1', cartRouter);
 app.use('/api/v1', orderRouter);
+app.use('/api/v1', paymentRouter);
 
 export default app;
